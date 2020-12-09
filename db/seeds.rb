@@ -9,6 +9,25 @@
 require 'faker'
 Faker::Config.locale = 'fr'
 
+20.times do |i|
+  User.create!(
+    email: Faker::Internet.email,
+    password: "azerty",
+    first_name: Faker::Name.first_name,
+    last_name: Faker::Name.last_name,
+    city: Faker::Address.city,
+    street: Faker::Address.street_name,
+    country: "France",
+    zip_code: Faker::Address.zip_code,
+    description: Faker::Hipster.paragraph,
+    dippers: rand(1..10),
+    user_rating: rand(1..5),
+    phone_number: Faker::PhoneNumber.phone_number
+  )
+end
+
+puts "#{User.all.count} users créés"
+
 ingredients = JSON.parse(File.read('db/data/ingredients.JSON'))
 ingredients.map { |ingredient| Ingredient.create!(name: ingredient.downcase) }
 
@@ -22,7 +41,9 @@ puts "#{Tag.all.count} tags créés"
 6.times do |i|
   UserDish.create!(
     name: Faker::Food.unique.dish,
-    description: Faker::Lorem.paragraph
+    description: Faker::Lorem.paragraph,
+    user_id: User.find(rand(1..20)).id,
+    dish_rating: rand(1..5)
   )
   3.times do |j|
     UserDishTag.create!(
@@ -37,3 +58,4 @@ puts "#{Tag.all.count} tags créés"
 end
 
 puts "#{UserDish.all.count} plats créés"
+puts "SEED DONE"

@@ -1,4 +1,5 @@
 class UserDish < ApplicationRecord
+  belongs_to :user
   has_many :user_dish_tags
   has_many :tags, through: :user_dish_tags
   has_many :user_dish_ingredients
