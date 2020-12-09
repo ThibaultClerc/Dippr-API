@@ -9,6 +9,16 @@
 require 'faker'
 Faker::Config.locale = 'fr'
 
+ingredients = JSON.parse(File.read('db/data/ingredients.JSON'))
+ingredients.map { |ingredient| Ingredient.create!(name: ingredient.downcase) }
+
+puts "#{Ingredient.all.count} ingrédients créés"
+
+tags = ["sucré", "salé", "sucré-salé", "entrée", "plat", "dessert", "gâteau", "cake", "vegan", "végétarien", "chaud", "froid", "viande", "accompagnement", "amuses-bouches", "cuisine orientale", "cuisine asiatique", "cuisine africaine", "cuisine antillaise", "cuisine française"]
+tags.map { |tag| Tag.create!(name: tag)}
+
+puts "#{Tag.all.count} tags créés"
+
 20.times do |i|
   User.create!(
     email: Faker::Internet.email,
@@ -24,25 +34,10 @@ Faker::Config.locale = 'fr'
     user_rating: rand(1..5),
     phone_number: Faker::PhoneNumber.phone_number
   )
-end
-
-puts "#{User.all.count} users créés"
-
-ingredients = JSON.parse(File.read('db/data/ingredients.JSON'))
-ingredients.map { |ingredient| Ingredient.create!(name: ingredient.downcase) }
-
-puts "#{Ingredient.all.count} ingrédients créés"
-
-tags = ["sucré", "salé", "sucré-salé", "entrée", "plat", "dessert", "gâteau", "cake", "vegan", "végétarien", "chaud", "froid", "viande", "accompagnement", "amuses-bouches", "cuisine orientale", "cuisine asiatique", "cuisine africaine", "cuisine antillaise", "cuisine française"]
-tags.map { |tag| Tag.create!(name: tag)}
-
-puts "#{Tag.all.count} tags créés"
-
-6.times do |i|
   UserDish.create!(
     name: Faker::Food.unique.dish,
     description: Faker::Lorem.paragraph,
-    user_id: User.find(rand(1..20)).id,
+    user_id: i + 1,
     dish_rating: rand(1..5)
   )
   3.times do |j|
@@ -57,5 +52,16 @@ puts "#{Tag.all.count} tags créés"
   end
 end
 
+puts "#{User.all.count} users créés"
 puts "#{UserDish.all.count} plats créés"
+
+40.times do |i|
+  MarketDish.create!(
+    user_id: User.find(rand(1..20)).id,
+    user_dish_id: UserDish.find(rand(1..20)).id,
+    market_dish_type: rand(0..1)
+  )
+end
+
+puts "#{MarketDish.all.count} plats mis sur le marché"
 puts "SEED DONE"

@@ -5,4 +5,5 @@ class User < ApplicationRecord
         :jwt_authenticatable, jwt_revocation_strategy: JwtDenylist
 
   has_many :user_dishes
+  has_many :market_dishes
 end
