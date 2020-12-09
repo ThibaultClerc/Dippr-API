@@ -35,6 +35,12 @@ ActiveRecord::Schema.define(version: 2020_12_09_103909) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "jwt_denylist", force: :cascade do |t|
+    t.string "jti", null: false
+    t.datetime "exp", null: false
+    t.index ["jti"], name: "index_jwt_denylist_on_jti"
+  end
+
   create_table "tags", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", precision: 6, null: false
@@ -65,6 +71,29 @@ ActiveRecord::Schema.define(version: 2020_12_09_103909) do
     t.integer "dish_rating"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.boolean "is_admin", default: false, null: false
+    t.string "first_name", default: ""
+    t.string "last_name", default: ""
+    t.string "city", default: ""
+    t.text "street", default: ""
+    t.string "country", default: ""
+    t.string "zip_code", default: ""
+    t.text "description", default: ""
+    t.integer "dippers", default: 3
+    t.integer "user_rating"
+    t.string "phone_number", default: ""
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
   add_foreign_key "dishes_ingredients", "ingredients"
