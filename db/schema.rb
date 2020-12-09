@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_09_153822) do
+ActiveRecord::Schema.define(version: 2020_12_09_173827) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -39,6 +39,16 @@ ActiveRecord::Schema.define(version: 2020_12_09_153822) do
     t.string "jti", null: false
     t.datetime "exp", null: false
     t.index ["jti"], name: "index_jwt_denylist_on_jti"
+  end
+
+  create_table "market_dishes", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "user_dish_id"
+    t.integer "market_dish_type"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_dish_id"], name: "index_market_dishes_on_user_dish_id"
+    t.index ["user_id"], name: "index_market_dishes_on_user_id"
   end
 
   create_table "tags", force: :cascade do |t|
@@ -102,6 +112,8 @@ ActiveRecord::Schema.define(version: 2020_12_09_153822) do
   add_foreign_key "dishes_ingredients", "user_dishes"
   add_foreign_key "dishes_tags", "tags"
   add_foreign_key "dishes_tags", "user_dishes"
+  add_foreign_key "market_dishes", "user_dishes"
+  add_foreign_key "market_dishes", "users"
   add_foreign_key "user_dish_ingredients", "ingredients"
   add_foreign_key "user_dish_ingredients", "user_dishes"
   add_foreign_key "user_dish_tags", "tags"
