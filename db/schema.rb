@@ -10,15 +10,67 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_09_094524) do
+ActiveRecord::Schema.define(version: 2020_12_09_103909) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "dishes_ingredients", force: :cascade do |t|
+    t.bigint "user_dish_id"
+    t.bigint "ingredient_id"
+    t.index ["ingredient_id"], name: "index_dishes_ingredients_on_ingredient_id"
+    t.index ["user_dish_id"], name: "index_dishes_ingredients_on_user_dish_id"
+  end
+
+  create_table "dishes_tags", force: :cascade do |t|
+    t.bigint "user_dish_id"
+    t.bigint "tag_id"
+    t.index ["tag_id"], name: "index_dishes_tags_on_tag_id"
+    t.index ["user_dish_id"], name: "index_dishes_tags_on_user_dish_id"
+  end
+
+  create_table "ingredients", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
 
   create_table "jwt_denylist", force: :cascade do |t|
     t.string "jti", null: false
     t.datetime "exp", null: false
     t.index ["jti"], name: "index_jwt_denylist_on_jti"
+  end
+
+  create_table "tags", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "user_dish_ingredients", force: :cascade do |t|
+    t.bigint "user_dish_id"
+    t.bigint "ingredient_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["ingredient_id"], name: "index_user_dish_ingredients_on_ingredient_id"
+    t.index ["user_dish_id"], name: "index_user_dish_ingredients_on_user_dish_id"
+  end
+
+  create_table "user_dish_tags", force: :cascade do |t|
+    t.bigint "user_dish_id"
+    t.bigint "tag_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["tag_id"], name: "index_user_dish_tags_on_tag_id"
+    t.index ["user_dish_id"], name: "index_user_dish_tags_on_user_dish_id"
+  end
+
+  create_table "user_dishes", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.integer "dish_rating"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "users", force: :cascade do |t|
@@ -44,4 +96,12 @@ ActiveRecord::Schema.define(version: 2020_12_09_094524) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "dishes_ingredients", "ingredients"
+  add_foreign_key "dishes_ingredients", "user_dishes"
+  add_foreign_key "dishes_tags", "tags"
+  add_foreign_key "dishes_tags", "user_dishes"
+  add_foreign_key "user_dish_ingredients", "ingredients"
+  add_foreign_key "user_dish_ingredients", "user_dishes"
+  add_foreign_key "user_dish_tags", "tags"
+  add_foreign_key "user_dish_tags", "user_dishes"
 end
