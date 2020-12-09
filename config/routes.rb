@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   namespace :api, defaults: { format: :json } do
     resources :users
     resources :ingredients, only: [:index]
+    resources :user_dishes
   end
 
   devise_for :users,
