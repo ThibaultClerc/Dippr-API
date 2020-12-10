@@ -56,8 +56,7 @@ puts "#{User.all.count} users créés"
 puts "#{UserDish.all.count} plats créés"
 
 40.times do |i|
-  MarketDish.create!(
-    user_id: User.find(rand(1..20)).id,
+  MarketDish.create(
     user_dish_id: UserDish.find(rand(1..20)).id,
     market_dish_type: rand(0..1)
   )

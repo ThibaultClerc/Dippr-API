@@ -15,7 +15,6 @@ class MarketDish < ApplicationRecord
 
   enum market_dish_type: [:troc, :donation]
 
-  belongs_to :user
   belongs_to :user_dish
   has_many :tags, through: :user_dish
   has_many :ingredients, through: :user_dish
