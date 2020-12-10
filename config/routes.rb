@@ -7,6 +7,7 @@ Rails.application.routes.draw do
       resources :user_dishes
     end
     resources :ingredients, only: [:index]
+    resources :tags, only: [:index]
     resources :user_dishes
     resources :market_dishes
   end
