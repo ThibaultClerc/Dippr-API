@@ -8,6 +8,7 @@ Rails.application.routes.draw do
     resources :tags, only: [:index]
     resources :user_dishes
     resources :market_dishes 
+    resources :dish_ingredients 
     get 'marketdishes/search', to: 'market_dishes#search'
   end
 
