@@ -18,7 +18,7 @@ class Api::DishIngredientsController < ApplicationController
     @dish_ingredient = DishIngredient.new(dish_ingredient_params)
 
     if @dish_ingredient.save
-      render json: @dish_ingredient, status: :created, location: @dish_ingredient
+      render json: @dish_ingredient, status: :created
     else
       render json: @dish_ingredient.errors, status: :unprocessable_entity
     end
