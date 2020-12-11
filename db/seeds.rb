@@ -19,7 +19,7 @@ tags.map { |tag| Tag.create!(name: tag)}
 
 puts "#{Tag.all.count} tags créés"
 
-20.times do |i|
+100.times do |i|
   User.create!(
     email: Faker::Internet.email,
     password: "azerty",
@@ -33,33 +33,36 @@ puts "#{Tag.all.count} tags créés"
     dippers: rand(1..10),
     user_rating: rand(1..5),
     phone_number: Faker::PhoneNumber.phone_number,
-    lat: Faker::Address.latitude,
-    lng: Faker::Address.longitude
+    lat: rand(48.810000..48.830000),
+    lng: rand(2.340000..2.350000)
   )
-  UserDish.create!(
-    name: Faker::Food.unique.dish,
-    description: Faker::Lorem.paragraph,
-    user_id: i + 1,
-    dish_rating: rand(1..5)
+  2.times do |k|
+    UserDish.create!(
+      name: Faker::Food.dish,
+      description: Faker::Lorem.paragraph,
+      user_id: i + 1,
+      dish_rating: rand(1..5)
   )
-  3.times do |j|
-    UserDishTag.create!(
-      user_dish_id: i + 1,
-      tag_id: Tag.find(rand(1..20)).id
-    )
-    UserDishIngredient.create!(
-      user_dish_id: i + 1,
-      ingredient_id: Ingredient.find(rand(1..2253)).id
-    )
+    3.times do |j|
+      UserDishTag.create!(
+        user_dish_id: UserDish.last.id,
+        tag_id: Tag.find(rand(1..20)).id
+      )
+      UserDishIngredient.create!(
+        user_dish_id: UserDish.last.id,
+        ingredient_id: Ingredient.find(rand(1..2253)).id
+      )
+    end
   end
+  
 end
 
 puts "#{User.all.count} users créés"
 puts "#{UserDish.all.count} plats créés"
 
-40.times do |i|
+400.times do |i|
   MarketDish.create(
-    user_dish_id: UserDish.find(rand(1..20)).id,
+    user_dish_id: UserDish.find(rand(1..200)).id,
     market_dish_type: rand(0..1)
   )
 end
