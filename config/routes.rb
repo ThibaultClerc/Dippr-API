@@ -9,6 +9,7 @@ Rails.application.routes.draw do
     resources :user_dishes
     resources :market_dishes 
     resources :user_dish_ingredients 
+    resources :user_dish_tags
     get 'marketdishes/search', to: 'market_dishes#search'
   end
 

@@ -3,8 +3,7 @@ class Api::UserDishesController < ApplicationController
 
   # GET /user_dishes
   def index
-    @user_dishes = UserDish.all
-
+    @user_dishes = UserDish.where(user_id: params[:user_id])
     render jsonapi: @user_dishes
   end
 
