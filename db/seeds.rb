@@ -32,7 +32,9 @@ puts "#{Tag.all.count} tags créés"
     description: Faker::Hipster.paragraph,
     dippers: rand(1..10),
     user_rating: rand(1..5),
-    phone_number: Faker::PhoneNumber.phone_number
+    phone_number: Faker::PhoneNumber.phone_number,
+    lat: Faker::Address.latitude,
+    lng: Faker::Address.longitude
   )
   UserDish.create!(
     name: Faker::Food.unique.dish,
