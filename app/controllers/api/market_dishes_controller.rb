@@ -8,9 +8,14 @@ class Api::MarketDishesController < ApplicationController
     render jsonapi: @marketdishes
   end
 
+  def search
+    @marketdishes = MarketDish.search_by_term(marketdishes_params[:query])
+    render jsonapi: @marketdishes
+  end
+
   private
 
   def marketdishes_params
-    params.permit(:id, :user_id, :user_dish_id, :market_dish_type)
+    params.permit(:id, :user_id, :user_dish_id, :market_dish_type, :query)
   end
 end

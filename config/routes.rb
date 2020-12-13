@@ -1,14 +1,16 @@
 Rails.application.routes.draw do
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
-
   namespace :api, defaults: { format: :json } do
     resources :users do
       resources :market_dishes
       resources :user_dishes
     end
     resources :ingredients, only: [:index]
+    resources :tags, only: [:index]
     resources :user_dishes
-    resources :market_dishes
+    resources :market_dishes 
+    resources :user_dish_ingredients 
+    resources :user_dish_tags
+    get 'marketdishes/search', to: 'market_dishes#search'
   end
 
   devise_for :users,

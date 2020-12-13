@@ -12,5 +12,4 @@ class SerializableMarketDish < JSONAPI::Serializable::Resource
     }
   end
 
-
 end
