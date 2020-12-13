@@ -6,12 +6,10 @@ class SerializableMarketDish < JSONAPI::Serializable::Resource
   meta do
     { user_dish: @object.user_dish,
       user_lat: @object.user_dish.user.lat,
-      user_lng: @object.user_dish.user.lng
+      user_lng: @object.user_dish.user.lng,
+      tags: @object.user_dish.tags,
+      ingredients: @object.user_dish.ingredients
     }
   end
 
-
 end
-
-
-
