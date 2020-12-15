@@ -19,7 +19,7 @@ tags.map { |tag| Tag.create!(name: tag)}
 
 puts "#{Tag.all.count} tags créés"
 
-20.times do |i|
+10.times do |i|
   User.create!(
     email: Faker::Internet.email,
     password: "azerty",
@@ -48,6 +48,7 @@ puts "#{Tag.all.count} tags créés"
       io: File.open(img),
       filename: File.basename(img)
     )
+    UserDish.last.update(photo_url: Rails.application.routes.url_helpers.rails_blob_path(UserDish.last.photo, only_path: true))
     3.times do |j|
       UserDishTag.create!(
         user_dish_id: UserDish.last.id,

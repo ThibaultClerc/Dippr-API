@@ -4,9 +4,6 @@ class SerializableUserDish< JSONAPI::Serializable::Resource
 
   type 'user_dishes'
 
-  attributes :id, :name, :description, :dish_rating, :user_id, :photo
+  attributes :id, :name, :description, :dish_rating, :user_id, :photo_url
 
-  def photo
-    rails_representation_url(object.photo, only_path: true) if object.photo.attached?
-  end
 end
