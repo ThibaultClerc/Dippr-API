@@ -46,4 +46,4 @@ gem 'table_print'
 gem 'faker'
 gem 'jsonapi-rails'
 gem 'pg_search'
-gem 'active_model_serializers'
+gem "aws-sdk-s3"
