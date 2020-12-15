@@ -8,6 +8,11 @@ class Api::MarketDishesController < ApplicationController
     render jsonapi: @marketdishes
   end
 
+  def show
+    @marketdish = MarketDish.find(marketdishes_params[:id])
+    render jsonapi: @marketdish
+  end
+
   def search
     @marketdishes = MarketDish.search_by_term(marketdishes_params[:query])
     render jsonapi: @marketdishes
