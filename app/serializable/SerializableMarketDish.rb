@@ -9,7 +9,8 @@ class SerializableMarketDish < JSONAPI::Serializable::Resource
       user_first_name: @object.user_dish.user.first_name,
       user_lng: @object.user_dish.user.lng,
       tags: @object.user_dish.tags,
-      ingredients: @object.user_dish.ingredients
+      ingredients: @object.user_dish.ingredients,
+      photo: @object.user_dish.photo
     }
   end
 

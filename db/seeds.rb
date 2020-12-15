@@ -19,7 +19,7 @@ tags.map { |tag| Tag.create!(name: tag)}
 
 puts "#{Tag.all.count} tags créés"
 
-100.times do |i|
+20.times do |i|
   User.create!(
     email: Faker::Internet.email,
     password: "azerty",
@@ -42,7 +42,12 @@ puts "#{Tag.all.count} tags créés"
       description: Faker::Lorem.paragraph,
       user_id: i + 1,
       dish_rating: rand(1..5)
-  )
+    )
+    img = "app/assets/images/examplePhoto.jpg"
+    UserDish.last.photo.attach(
+      io: File.open(img),
+      filename: File.basename(img)
+    )
     3.times do |j|
       UserDishTag.create!(
         user_dish_id: UserDish.last.id,
@@ -54,15 +59,15 @@ puts "#{Tag.all.count} tags créés"
       )
     end
   end
-  
 end
+
 
 puts "#{User.all.count} users créés"
 puts "#{UserDish.all.count} plats créés"
 
-400.times do |i|
+40.times do |i|
   MarketDish.create(
-    user_dish_id: UserDish.find(rand(1..200)).id,
+    user_dish_id: UserDish.find(rand(1..20)).id,
     market_dish_type: rand(0..1)
   )
 end
