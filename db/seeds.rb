@@ -8,6 +8,7 @@
 
 require 'faker'
 Faker::Config.locale = 'fr'
+include Rails.application.routes.url_helpers
 
 ingredients = JSON.parse(File.read('db/data/ingredients.JSON'))
 ingredients.map { |ingredient| Ingredient.create!(name: ingredient.downcase) }
@@ -49,7 +50,7 @@ puts "#{Tag.all.count} tags créés"
       io: File.open(img),
       filename: File.basename(img)
     )
-    UserDish.last.update(photo_url: Rails.application.routes.url_helpers.rails_blob_path(UserDish.last.photo, only_path: true))
+    UserDish.last.update(photo_url: url_for(UserDish.last.photo))
     3.times do |j|
       UserDishTag.create!(
         user_dish_id: UserDish.last.id,

@@ -3,7 +3,6 @@ class Api::UsersController < ApplicationController
   before_action :authenticate_user!, only: [:show, :update, :index]
 
   def index
-    puts "dans index"
     @users = User.all
     render jsonapi: @users
   end
@@ -27,7 +26,7 @@ class Api::UsersController < ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:id, :email, :first_name, :last_name, :password, :country, :city, :street, :zip_code, :description, :phone_number)
+    params.permit(:id, :email, :first_name, :last_name, :password, :country, :city, :street, :zip_code, :description, :phone_number)
   end
 
 
