@@ -45,3 +45,5 @@ gem 'devise-jwt'
 gem 'table_print'
 gem 'faker'
 gem 'jsonapi-rails'
+gem 'pg_search'
+gem "aws-sdk-s3"
