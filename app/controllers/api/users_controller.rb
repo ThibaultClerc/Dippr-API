@@ -1,6 +1,11 @@
 class Api::UsersController < Api::BaseController
-  before_action :find_user
+  before_action :find_user, only: [:show, :update]
   before_action :authenticate_user!, only: [:show, :update]
+
+  def index
+    @users = User.all
+    render json: @user
+  end
 
   def show
     render_jsonapi_response(@user)
@@ -21,7 +26,7 @@ class Api::UsersController < Api::BaseController
   end
 
   def user_params
-    params.require(:user).permit(:id, :email, :first_name, :last_name, :password, :country, :city, :street, :zip_code, :description, :phone_number)
+    params.permit(:id, :email, :first_name, :last_name, :password, :country, :city, :street, :zip_code, :description, :phone_number)
   end
 
 
