@@ -1,5 +1,6 @@
 class Api::UserDishesController < ApplicationController
   before_action :set_user_dish, only: [:show, :update, :destroy]
+  before_action :authenticate_user!, only: [:create, :destroy]
 
   # GET /user_dishes
   def index
@@ -20,17 +21,17 @@ class Api::UserDishesController < ApplicationController
   def create
     @user_dish = UserDish.new(user_dish_params)
     @user_dish.user_id = current_user.id
-    if user_dish_params[:file]
-      @user_dish.photo.attach(user_dish_params[:file])
+    if file_params[:file]
+      @user_dish.photo.attach(file_params[:file])
       @user_dish.photo_url = rails_blob_path(@user_dish.photo, only_path: true)
-    elsif user_dish_params[:camera]
-      blob = ActiveStorage::Blob.create_after_upload!(
-        io: StringIO.new((Base64.decode64(user_dish_params[:camera].split(",")[1]))),
-        filename: `#{user_dish_params[:user_id]}_#{user_dish_params[:id]}.png`,
-        content_type: "image/png",
-      )
-      @user_dish.photo.attach(blob)
-      @user_dish.photo_url = rails_blob_path(@user_dish.photo, only_path: true)
+    # elsif user_dish_params[:camera]
+    #   blob = ActiveStorage::Blob.create_after_upload!(
+    #     io: StringIO.new((Base64.decode64(user_dish_params[:camera].split(",")[1]))),
+    #     filename: `#{user_dish_params[:user_id]}_#{user_dish_params[:id]}.png`,
+    #     content_type: "image/png",
+    #   )
+    #   @user_dish.photo.attach(blob)
+    #   @user_dish.photo_url = rails_blob_path(@user_dish.photo, only_path: true)
     end
     if @user_dish.save
       render jsonapi: @user_dish, status: :created
@@ -41,17 +42,17 @@ class Api::UserDishesController < ApplicationController
 
   # PATCH/PUT /user_dishes/1
   def update
-    if user_dish_params[:file]
-      @user_dish.photo.attach(user_dish_params[:file])
+    if file_params[:file]
+      @user_dish.photo.attach(file_params[:file])
       photo_url = rails_blob_path(@user_dish.photo, only_path: true)
-    elsif user_dish_params[:camera]
-      blob = ActiveStorage::Blob.create_after_upload!(
-        io: StringIO.new((Base64.decode64(user_dish_params[:camera].split(",")[1]))),
-        filename: `#{user_dish_params[:user_id]}_#{user_dish_params[:id]}.png`,
-        content_type: "image/png",
-      )
-      @user_dish.photo.attach(blob)
-      photo_url = rails_blob_path(@user_dish.photo, only_path: true)
+    # elsif user_dish_params[:camera]
+    #   blob = ActiveStorage::Blob.create_after_upload!(
+    #     io: StringIO.new((Base64.decode64(user_dish_params[:camera].split(",")[1]))),
+    #     filename: `#{user_dish_params[:user_id]}_#{user_dish_params[:id]}.png`,
+    #     content_type: "image/png",
+    #   )
+    #   @user_dish.photo.attach(blob)
+    #   photo_url = rails_blob_path(@user_dish.photo, only_path: true)
     end
     if @user_dish.update(photo_url: photo_url)
       render json: @user_dish
@@ -73,7 +74,10 @@ class Api::UserDishesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def user_dish_params
-      params.permit(:id, :name, :description, :user_id, :dish_rating, :photo_url, :camera, :file)
+      params.permit(:id, :name, :description, :user_id, :dish_rating, :photo_url)
     end
 
+    def file_params
+      params.permit(:file)
+    end
 end

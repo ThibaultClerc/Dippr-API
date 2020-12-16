@@ -1,4 +1,6 @@
 class Api::MarketDishesController < ApplicationController
+  before_action :authenticate_user!, only: [:create, :destroy]
+
   def index
     if marketdishes_params.include?(:user_id)
       @marketdishes = User.find(marketdishes_params[:user_id]).market_dishes
