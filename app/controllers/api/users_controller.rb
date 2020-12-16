@@ -1,6 +1,12 @@
-class Api::UsersController < Api::BaseController
-  before_action :find_user
-  before_action :authenticate_user!, only: [:show, :update]
+class Api::UsersController < ApplicationController
+  before_action :find_user, only: [:show, :update, :destroy]
+  before_action :authenticate_user!, only: [:show, :update, :index]
+
+  def index
+    puts "dans index"
+    @users = User.all
+    render jsonapi: @users
+  end
 
   def show
     render_jsonapi_response(@user)
