@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  default_url_options :host => "https://dippr-api-development.herokuapp.com"
   namespace :api, defaults: { format: :json } do
     resources :users do
       resources :market_dishes

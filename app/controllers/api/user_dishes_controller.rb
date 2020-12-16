@@ -23,7 +23,7 @@ class Api::UserDishesController < ApplicationController
     @user_dish.user_id = current_user.id
     if file_params[:file]
       @user_dish.photo.attach(file_params[:file])
-      @user_dish.photo_url = rails_blob_path(@user_dish.photo, only_path: true)
+      @user_dish.photo_url = url_for(@user_dish.photo)
     end
     if @user_dish.save
       render jsonapi: @user_dish, status: :created
@@ -36,7 +36,7 @@ class Api::UserDishesController < ApplicationController
   def update
     if file_params[:file]
       @user_dish.photo.attach(file_params[:file])
-      photo_url = rails_blob_path(@user_dish.photo, only_path: true)
+      photo_url = url_for(@user_dish.photo)
     end
     if @user_dish.update(photo_url: photo_url)
       render json: @user_dish
