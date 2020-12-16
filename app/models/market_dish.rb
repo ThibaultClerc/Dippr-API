@@ -1,5 +1,4 @@
 class MarketDish < ApplicationRecord
-  accepts_nested_attributes_for :ingredients, :tags, :user_dish
   include  PgSearch::Model
   pg_search_scope :search_by_term,
     associated_against: {
