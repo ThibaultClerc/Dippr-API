@@ -35,6 +35,7 @@ puts "#{Tag.all.count} tags créés"
     phone_number: Faker::PhoneNumber.phone_number,
     lat: rand(48.810000..48.830000),
     lng: rand(2.340000..2.350000)
+
   )
   2.times do |k|
     UserDish.create!(

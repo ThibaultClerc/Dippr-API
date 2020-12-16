@@ -6,5 +6,4 @@ class UserDish < ApplicationRecord
   has_many :user_dish_ingredients
   has_many :ingredients, through: :user_dish_ingredients
   has_many :market_dishes
-
 end
