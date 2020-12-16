@@ -1,10 +1,10 @@
-class Api::UsersController < Api::BaseController
+class Api::UsersController < ApplicationController
   before_action :find_user, only: [:show, :update]
-  before_action :authenticate_user!, only: [:show, :update]
+  before_action :authenticate_user!, only: [:show, :update, :index]
 
   def index
     @users = User.all
-    render json: @user
+    render jsonapi: @users
   end
 
   def show
