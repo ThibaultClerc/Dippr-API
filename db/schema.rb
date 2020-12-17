@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_17_134204) do
+ActiveRecord::Schema.define(version: 2020_12_17_154540) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -78,7 +78,7 @@ ActiveRecord::Schema.define(version: 2020_12_17_134204) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.datetime "end_date", null: false
-    t.boolean "is_private", null: false
+    t.boolean "is_private"
     t.index ["user_dish_id"], name: "index_market_dishes_on_user_dish_id"
   end
 
