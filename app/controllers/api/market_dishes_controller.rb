@@ -16,7 +16,7 @@ class Api::MarketDishesController < ApplicationController
   end
 
   def create
-    @market_dish = MarketDish.new(market_dishes_params)
+    @market_dish = MarketDish.new(marketdishes_params)
     @market_dish.user_id = current_user.id
     if @market_dish.save
       render jsonapi: @market_dish, status: :created
