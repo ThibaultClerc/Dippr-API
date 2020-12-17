@@ -17,7 +17,6 @@ class Api::MarketDishesController < ApplicationController
 
   def create
     @market_dish = MarketDish.new(marketdishes_params)
-    @market_dish.user_id = current_user.id
     if @market_dish.save
       render jsonapi: @market_dish, status: :created
     else
@@ -33,7 +32,7 @@ class Api::MarketDishesController < ApplicationController
   private
 
   def marketdishes_params
-    params.permit(:id, :user_id, :user_dish_id, :market_dish_type, :end_date)
+    params.permit(:id, :user_dish_id, :market_dish_type, :end_date)
   end
 
   def query_params
