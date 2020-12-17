@@ -10,6 +10,10 @@ require 'faker'
 Faker::Config.locale = 'fr'
 include Rails.application.routes.url_helpers
 
+def time_rand from = 0.0, to = Time.now
+  Time.at(from + rand * (to.to_f - from.to_f))
+end
+
 ingredients = JSON.parse(File.read('db/data/ingredients.JSON'))
 ingredients.map { |ingredient| Ingredient.create!(name: ingredient.downcase) }
 
@@ -61,19 +65,52 @@ puts "#{Tag.all.count} tags créés"
         ingredient_id: Ingredient.find(rand(1..2253)).id
       )
     end
+    MarketDish.create(
+    user_dish_id: UserDish.last.id,
+    market_dish_type: 0,
+    end_date: Faker::Date.forward(days: 14),
+    is_private: [true, false].sample
+    )
+    MarketDish.create(
+      user_dish_id: UserDish.last.id,
+      market_dish_type: 1,
+      end_date: Faker::Date.forward(days: 14),
+      is_private: false
+    )
   end
 end
 
 
 puts "#{User.all.count} users créés"
 puts "#{UserDish.all.count} plats créés"
+puts "#{MarketDish.all.count} plats mis sur le marché"
 
-40.times do |i|
-  MarketDish.create(
-    user_dish_id: UserDish.find(rand(1..20)).id,
-    market_dish_type: rand(0..1)
+caller_dish_id = 1
+answer_dish_id = 21
+10.times do |i|
+  Troc.create!(
+    caller_dish_id: caller_dish_id,
+    answer_dish_id: answer_dish_id,
+    status: rand(0..4)
   )
+  caller_dish_id += 2
+  answer_dish_id += 2
 end
 
-puts "#{MarketDish.all.count} plats mis sur le marché"
+puts "#{Troc.all.count} trocs créés"
+
+
+
+answer_dish_id = 12
+10.times do |i|
+  Donation.create!(
+    caller_id: rand(1..5),
+    answer_dish_id: answer_dish_id,
+    status: rand(0..4)
+  )
+  answer_dish_id += 2
+end
+
+puts "#{Donation.all.count} dons créés"
+
 puts "SEED DONE"

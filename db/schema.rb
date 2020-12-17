@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_15_220010) do
+ActiveRecord::Schema.define(version: 2020_12_17_134204) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -50,6 +50,16 @@ ActiveRecord::Schema.define(version: 2020_12_15_220010) do
     t.index ["user_dish_id"], name: "index_dishes_tags_on_user_dish_id"
   end
 
+  create_table "donations", force: :cascade do |t|
+    t.bigint "caller_id"
+    t.bigint "answer_dish_id"
+    t.integer "status"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["answer_dish_id"], name: "index_donations_on_answer_dish_id"
+    t.index ["caller_id"], name: "index_donations_on_caller_id"
+  end
+
   create_table "ingredients", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", precision: 6, null: false
@@ -67,6 +77,8 @@ ActiveRecord::Schema.define(version: 2020_12_15_220010) do
     t.integer "market_dish_type"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.datetime "end_date", null: false
+    t.boolean "is_private", null: false
     t.index ["user_dish_id"], name: "index_market_dishes_on_user_dish_id"
   end
 
@@ -74,6 +86,16 @@ ActiveRecord::Schema.define(version: 2020_12_15_220010) do
     t.string "name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "trocs", force: :cascade do |t|
+    t.bigint "caller_dish_id"
+    t.bigint "answer_dish_id"
+    t.integer "status"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["answer_dish_id"], name: "index_trocs_on_answer_dish_id"
+    t.index ["caller_dish_id"], name: "index_trocs_on_caller_dish_id"
   end
 
   create_table "user_dish_ingredients", force: :cascade do |t|
@@ -135,7 +157,11 @@ ActiveRecord::Schema.define(version: 2020_12_15_220010) do
   add_foreign_key "dishes_ingredients", "user_dishes"
   add_foreign_key "dishes_tags", "tags"
   add_foreign_key "dishes_tags", "user_dishes"
+  add_foreign_key "donations", "market_dishes", column: "answer_dish_id"
+  add_foreign_key "donations", "users", column: "caller_id"
   add_foreign_key "market_dishes", "user_dishes"
+  add_foreign_key "trocs", "market_dishes", column: "answer_dish_id"
+  add_foreign_key "trocs", "market_dishes", column: "caller_dish_id"
   add_foreign_key "user_dish_ingredients", "ingredients"
   add_foreign_key "user_dish_ingredients", "user_dishes"
   add_foreign_key "user_dish_tags", "tags"

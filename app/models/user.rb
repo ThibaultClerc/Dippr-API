@@ -6,4 +6,6 @@ class User < ApplicationRecord
 
   has_many :user_dishes
   has_many :market_dishes, through: :user_dishes
+  has_many :trocs, through: :market_dishes
+  has_many :donations, foreign_key: "caller_id", class_name: "Donation"
 end
