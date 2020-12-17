@@ -10,10 +10,6 @@ require 'faker'
 Faker::Config.locale = 'fr'
 include Rails.application.routes.url_helpers
 
-def time_rand from = 0.0, to = Time.now
-  Time.at(from + rand * (to.to_f - from.to_f))
-end
-
 ingredients = JSON.parse(File.read('db/data/ingredients.JSON'))
 ingredients.map { |ingredient| Ingredient.create!(name: ingredient.downcase) }
 
@@ -98,8 +94,6 @@ answer_dish_id = 21
 end
 
 puts "#{Troc.all.count} trocs créés"
-
-
 
 answer_dish_id = 12
 10.times do |i|
