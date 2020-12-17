@@ -1,7 +1,7 @@
 class SerializableMarketDish < JSONAPI::Serializable::Resource
   type 'market_dishes'
 
-  attributes :id, :user_dish_id, :market_dish_type, :created_at
+  attributes :id, :user_dish_id, :market_dish_type, :created_at, :end_date
 
   meta do
     { user_dish: @object.user_dish,

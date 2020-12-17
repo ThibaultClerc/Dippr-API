@@ -15,14 +15,28 @@ class Api::MarketDishesController < ApplicationController
     render jsonapi: @marketdish
   end
 
+  def create
+    @market_dish = MarketDish.new(market_dishes_params)
+    @market_dish.user_id = current_user.id
+    if @market_dish.save
+      render jsonapi: @market_dish, status: :created
+    else
+      render jsonapi: @market_dish.errors, status: :unprocessable_entity
+    end
+  end
+
   def search
-    @marketdishes = MarketDish.search_by_term(marketdishes_params[:query])
+    @marketdishes = MarketDish.search_by_term(query_params[:query])
     render jsonapi: @marketdishes
   end
 
   private
 
   def marketdishes_params
-    params.permit(:id, :user_id, :user_dish_id, :market_dish_type, :query)
+    params.permit(:id, :user_id, :user_dish_id, :market_dish_type, :end_date)
+  end
+
+  def query_params
+    params.permit(:query)
   end
 end
