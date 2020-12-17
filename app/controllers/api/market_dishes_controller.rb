@@ -3,7 +3,7 @@ class Api::MarketDishesController < ApplicationController
 
   def index
     if user_params.include?(:user_id)
-      @marketdishes = User.find(marketdishes_params[:user_id]).market_dishes
+      @marketdishes = User.find(user_params[:user_id]).market_dishes
     else
       @marketdishes = MarketDish.all
     end
