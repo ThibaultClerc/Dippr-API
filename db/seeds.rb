@@ -50,7 +50,7 @@ puts "#{Tag.all.count} tags créés"
       io: File.open(img),
       filename: File.basename(img)
     )
-    UserDish.last.update(photo_url: url_for(UserDish.last.photo))
+    UserDish.last.update(photo_url: rails_blob_path(UserDish.last.photo, only_path: true))
     3.times do |j|
       UserDishTag.create!(
         user_dish_id: UserDish.last.id,
