@@ -3,7 +3,9 @@ class Api::TrocsController < ApplicationController
 
   def index
     if user_params.include?(:user_id)
-      @trocs = User.find(user_params[:user_id]).trocs
+      @trocs = User.find(user_params[:user_id]).market_dishes.where(market_dish_type: 0)
+      if Troc.all.any? {|troc| @trocs.include?(troc) }
+        Troc.where()
     else
       @trocs = Troc.all
     end
@@ -16,10 +18,9 @@ class Api::TrocsController < ApplicationController
   # end
 
   def create
-    @user_trocs = User.find(user_params[:user_id]).trocs
+    @user_trocs = User.find(current_user.id).trocs
     if !@user_trocs.include?(Troc.find(troc_params[:answer_dish_id])) 
       @troc = Troc.new(troc_params)
-      @troc.caller_dish_id = current_user.id
       if @troc.save
         render jsonapi: @troc, status: :created
       else
@@ -41,7 +42,7 @@ class Api::TrocsController < ApplicationController
   private
 
   def troc_params
-    params.permit(:id, :answer_dish_id, :status)
+    params.permit(:id, :answer_dish_id, :status, :caller_dish_id)
   end
 
   def user_params

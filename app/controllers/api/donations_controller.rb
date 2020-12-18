@@ -16,7 +16,7 @@ class Api::DonationsController < ApplicationController
   # end
 
   def create
-    @user_donations = User.find(user_params[:user_id]).donations
+    @user_donations = User.find(current_user.id).donations
     if !@user_donations.include?(Donation.find(donation_params[:answer_dish_id])) 
       @donation = Donation.new(donation_params)
       @donation.caller_id = current_user.id
