@@ -1,14 +1,14 @@
 class Api::DonationsController < ApplicationController
   before_action :authenticate_user!
 
-  # def index
-  #   if user_params.include?(:user_id)
-  #     @marketdishes = User.find(user_params[:user_id]).market_dishes
-  #   else
-  #     @marketdishes = MarketDish.all
-  #   end
-  #   render jsonapi: @marketdishes
-  # end
+  def index
+    if user_params.include?(:user_id)
+      @donations = User.find(user_params[:user_id]).donations
+    else
+      @donations = Donation.all
+    end
+    render jsonapi: @donations
+  end
 
   # def show
   #   @marketdish = MarketDish.find(marketdishes_params[:id])
@@ -16,12 +16,24 @@ class Api::DonationsController < ApplicationController
   # end
 
   def create
-    @donation = Donation.new(donation_params)
-    @donation.caller_id = current_user.id
-    if @donation.save
-      render jsonapi: @donation, status: :created
+    @user_donations = User.find(user_params[:user_id]).donations
+    if !@user_donations.include?(Donation.find(donation_params[:answer_dish_id])) 
+      @donation = Donation.new(donation_params)
+      @donation.caller_id = current_user.id
+      if @donation.save
+        render jsonapi: @donation, status: :created
+      else
+        render jsonapi: @donation.errors, status: :unprocessable_entity
+      end
     else
-      render jsonapi: @donation.errors, status: :unprocessable_entity
+      render jsonapi: { message: 'Donation for this dish has already been asked' }, status: :internal_server_error
+    end
+  end
+
+  def destroy
+    @donation = Donation.find(donation_params[:id])
+    if current_user.id === @donation.caller.id
+      @donation.destroy
     end
   end
 

@@ -24,6 +24,13 @@ class Api::MarketDishesController < ApplicationController
     end
   end
 
+  def destroy
+    @market_dish = MarketDish.find(marketdishes_params[:id])
+    if current_user.id === @market_dish.user_dish.user.id
+      @market_dish.destroy
+    end
+  end
+
   def search
     @marketdishes = MarketDish.search_by_term(query_params[:query])
     render jsonapi: @marketdishes

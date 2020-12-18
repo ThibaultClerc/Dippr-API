@@ -1,14 +1,14 @@
 class Api::TrocsController < ApplicationController
   before_action :authenticate_user!
 
-  # def index
-  #   if user_params.include?(:user_id)
-  #     @marketdishes = User.find(user_params[:user_id]).market_dishes
-  #   else
-  #     @marketdishes = MarketDish.all
-  #   end
-  #   render jsonapi: @marketdishes
-  # end
+  def index
+    if user_params.include?(:user_id)
+      @trocs = User.find(user_params[:user_id]).trocs
+    else
+      @trocs = Troc.all
+    end
+    render jsonapi: @trocs
+  end
 
   # def show
   #   @marketdish = MarketDish.find(marketdishes_params[:id])
@@ -16,12 +16,24 @@ class Api::TrocsController < ApplicationController
   # end
 
   def create
-    @troc = Troc.new(troc_params)
-    @troc.caller_dish_id = current_user.id
-    if @troc.save
-      render jsonapi: @troc, status: :created
+    @user_trocs = User.find(user_params[:user_id]).trocs
+    if !@user_trocs.include?(Troc.find(troc_params[:answer_dish_id])) 
+      @troc = Troc.new(troc_params)
+      @troc.caller_dish_id = current_user.id
+      if @troc.save
+        render jsonapi: @troc, status: :created
+      else
+        render jsonapi: @troc.errors, status: :unprocessable_entity
+      end
     else
-      render jsonapi: @troc.errors, status: :unprocessable_entity
+      render jsonapi: { message: 'Troc for this dish has already been asked' }, status: :internal_server_error
+    end
+  end
+
+  def destroy
+    @troc = Troc.find(troc_params[:id])
+    if current_user.id === @troc.caller_dish.user_dish.user.id
+      @troc.destroy
     end
   end
 

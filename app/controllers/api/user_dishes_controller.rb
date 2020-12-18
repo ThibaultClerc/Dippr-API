@@ -47,7 +47,10 @@ class Api::UserDishesController < ApplicationController
 
   # DELETE /user_dishes/1
   def destroy
-    @user_dish.destroy
+    @user_dish = UserDish.find(user_dish_params[:id])
+    if current_user.id === @user_dish.user.id
+      @user_dish.destroy
+    end
   end
 
   private
