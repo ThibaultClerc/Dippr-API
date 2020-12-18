@@ -3,4 +3,6 @@ class Troc < ApplicationRecord
 
   belongs_to :caller_dish,   class_name: "MarketDish"
   belongs_to :answer_dish, class_name: "MarketDish"
+  belongs_to :caller,   class_name: "User"
+  belongs_to :answerer,   class_name: "User"
 end

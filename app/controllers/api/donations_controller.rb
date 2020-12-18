@@ -10,10 +10,10 @@ class Api::DonationsController < ApplicationController
     render jsonapi: @donations
   end
 
-  # def show
-  #   @marketdish = MarketDish.find(marketdishes_params[:id])
-  #   render jsonapi: @marketdish
-  # end
+  def show
+    @donation = Donation.find(donation_params[:id])
+    render jsonapi: @donation
+  end
 
   def create
     @user_donations = User.find(current_user.id).donations
@@ -30,10 +30,14 @@ class Api::DonationsController < ApplicationController
     end
   end
 
-  def destroy
+  def update
     @donation = Donation.find(donation_params[:id])
-    if current_user.id === @donation.caller.id
-      @donation.destroy
+    if @donation.pending? || @donation.confirmed?
+      if @donation.update(status: donation_params[:status])
+        render json: @donation
+      else
+        render json: @donation.errors, status: :unprocessable_entity
+      end
     end
   end
 
@@ -41,7 +45,7 @@ class Api::DonationsController < ApplicationController
   private
 
   def donation_params
-    params.permit(:id, :answer_dish_id, :status)
+    params.permit(:id, :answer_dish_id, :status, :answerer_id)
   end
 
   def user_params

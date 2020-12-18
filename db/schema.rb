@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_17_154540) do
+ActiveRecord::Schema.define(version: 2020_12_18_193355) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -56,7 +56,9 @@ ActiveRecord::Schema.define(version: 2020_12_17_154540) do
     t.integer "status"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "answerer_id"
     t.index ["answer_dish_id"], name: "index_donations_on_answer_dish_id"
+    t.index ["answerer_id"], name: "index_donations_on_answerer_id"
     t.index ["caller_id"], name: "index_donations_on_caller_id"
   end
 
@@ -94,8 +96,12 @@ ActiveRecord::Schema.define(version: 2020_12_17_154540) do
     t.integer "status"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "caller_id"
+    t.bigint "answerer_id"
     t.index ["answer_dish_id"], name: "index_trocs_on_answer_dish_id"
+    t.index ["answerer_id"], name: "index_trocs_on_answerer_id"
     t.index ["caller_dish_id"], name: "index_trocs_on_caller_dish_id"
+    t.index ["caller_id"], name: "index_trocs_on_caller_id"
   end
 
   create_table "user_dish_ingredients", force: :cascade do |t|
@@ -158,10 +164,13 @@ ActiveRecord::Schema.define(version: 2020_12_17_154540) do
   add_foreign_key "dishes_tags", "tags"
   add_foreign_key "dishes_tags", "user_dishes"
   add_foreign_key "donations", "market_dishes", column: "answer_dish_id"
+  add_foreign_key "donations", "users", column: "answerer_id"
   add_foreign_key "donations", "users", column: "caller_id"
   add_foreign_key "market_dishes", "user_dishes"
   add_foreign_key "trocs", "market_dishes", column: "answer_dish_id"
   add_foreign_key "trocs", "market_dishes", column: "caller_dish_id"
+  add_foreign_key "trocs", "users", column: "answerer_id"
+  add_foreign_key "trocs", "users", column: "caller_id"
   add_foreign_key "user_dish_ingredients", "ingredients"
   add_foreign_key "user_dish_ingredients", "user_dishes"
   add_foreign_key "user_dish_tags", "tags"

@@ -3,24 +3,23 @@ class Api::TrocsController < ApplicationController
 
   def index
     if user_params.include?(:user_id)
-      @trocs = User.find(user_params[:user_id]).market_dishes.where(market_dish_type: 0)
-      if Troc.all.any? {|troc| @trocs.include?(troc) }
-        Troc.where()
+      @trocs = User.find(user_params[:user_id]).trocs
     else
       @trocs = Troc.all
     end
     render jsonapi: @trocs
   end
 
-  # def show
-  #   @marketdish = MarketDish.find(marketdishes_params[:id])
-  #   render jsonapi: @marketdish
-  # end
+  def show
+    @troc = Troc.find(troc_params[:id])
+    render jsonapi: @troc
+  end
 
   def create
     @user_trocs = User.find(current_user.id).trocs
     if !@user_trocs.include?(Troc.find(troc_params[:answer_dish_id])) 
       @troc = Troc.new(troc_params)
+      @troc.caller_id = current_user.id
       if @troc.save
         render jsonapi: @troc, status: :created
       else
@@ -31,18 +30,21 @@ class Api::TrocsController < ApplicationController
     end
   end
 
-  def destroy
+  def update
     @troc = Troc.find(troc_params[:id])
-    if current_user.id === @troc.caller_dish.user_dish.user.id
-      @troc.destroy
+    if @troc.pending? || @troc.confirmed?
+      if @troc.update(status: troc_params[:status])
+        render json: @troc
+      else
+        render json: @troc.errors, status: :unprocessable_entity
+      end
     end
   end
-
 
   private
 
   def troc_params
-    params.permit(:id, :answer_dish_id, :status, :caller_dish_id)
+    params.permit(:id, :answer_dish_id, :caller_dish_id, :answerer_id, :status)
   end
 
   def user_params
