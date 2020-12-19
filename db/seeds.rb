@@ -8,6 +8,7 @@
 
 require 'faker'
 Faker::Config.locale = 'fr'
+include Rails.application.routes.url_helpers
 
 ingredients = JSON.parse(File.read('db/data/ingredients.JSON'))
 ingredients.map { |ingredient| Ingredient.create!(name: ingredient.downcase) }
@@ -49,7 +50,7 @@ puts "#{Tag.all.count} tags créés"
       io: File.open(img),
       filename: File.basename(img)
     )
-    UserDish.last.update(photo_url: Rails.application.routes.url_helpers.rails_blob_path(UserDish.last.photo, only_path: true))
+    UserDish.last.update(photo_url: rails_blob_path(UserDish.last.photo, only_path: true))
     3.times do |j|
       UserDishTag.create!(
         user_dish_id: UserDish.last.id,
@@ -60,19 +61,61 @@ puts "#{Tag.all.count} tags créés"
         ingredient_id: Ingredient.find(rand(1..2253)).id
       )
     end
+    MarketDish.create(
+    user_dish_id: UserDish.last.id,
+    market_dish_type: 0,
+    end_date: Faker::Date.forward(days: 14),
+    is_private: [true, false].sample
+    )
+    MarketDish.create(
+      user_dish_id: UserDish.last.id,
+      market_dish_type: 1,
+      end_date: Faker::Date.forward(days: 14),
+      is_private: false
+    )
   end
 end
 
 
 puts "#{User.all.count} users créés"
 puts "#{UserDish.all.count} plats créés"
+puts "#{MarketDish.all.count} plats mis sur le marché"
 
-40.times do |i|
-  MarketDish.create(
-    user_dish_id: UserDish.find(rand(1..20)).id,
-    market_dish_type: rand(0..1)
+caller_id = 1
+answerer_id = 6
+caller_dish_id = 1
+answer_dish_id = 21
+5.times do |i|
+  Troc.create!(
+    caller_id: caller_id,
+    answerer_id: answerer_id,
+    caller_dish_id: caller_dish_id,
+    answer_dish_id: answer_dish_id,
+    status: rand(0..4)
   )
+  caller_id += 1
+  answerer_id += 1
+  caller_dish_id += 2
+  answer_dish_id += 2
 end
 
-puts "#{MarketDish.all.count} plats mis sur le marché"
+puts "#{Troc.all.count} trocs créés"
+
+answer_dish_donation_id = 12
+caller_donation_id = 1
+answerer_donation_id = 6
+5.times do |i|
+  Donation.create!(
+    answerer_id: answerer_donation_id,
+    caller_id: caller_donation_id,
+    answer_dish_id: answer_dish_donation_id,
+    status: rand(0..4)
+  )
+  answer_dish_donation_id += 2
+  caller_donation_id += 1
+  answerer_donation_id += 1
+end
+
+puts "#{Donation.all.count} dons créés"
+
 puts "SEED DONE"

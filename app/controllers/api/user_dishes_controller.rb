@@ -24,14 +24,6 @@ class Api::UserDishesController < ApplicationController
     if file_params[:file]
       @user_dish.photo.attach(file_params[:file])
       @user_dish.photo_url = rails_blob_path(@user_dish.photo, only_path: true)
-    # elsif user_dish_params[:camera]
-    #   blob = ActiveStorage::Blob.create_after_upload!(
-    #     io: StringIO.new((Base64.decode64(user_dish_params[:camera].split(",")[1]))),
-    #     filename: `#{user_dish_params[:user_id]}_#{user_dish_params[:id]}.png`,
-    #     content_type: "image/png",
-    #   )
-    #   @user_dish.photo.attach(blob)
-    #   @user_dish.photo_url = rails_blob_path(@user_dish.photo, only_path: true)
     end
     if @user_dish.save
       render jsonapi: @user_dish, status: :created
@@ -45,14 +37,6 @@ class Api::UserDishesController < ApplicationController
     if file_params[:file]
       @user_dish.photo.attach(file_params[:file])
       photo_url = rails_blob_path(@user_dish.photo, only_path: true)
-    # elsif user_dish_params[:camera]
-    #   blob = ActiveStorage::Blob.create_after_upload!(
-    #     io: StringIO.new((Base64.decode64(user_dish_params[:camera].split(",")[1]))),
-    #     filename: `#{user_dish_params[:user_id]}_#{user_dish_params[:id]}.png`,
-    #     content_type: "image/png",
-    #   )
-    #   @user_dish.photo.attach(blob)
-    #   photo_url = rails_blob_path(@user_dish.photo, only_path: true)
     end
     if @user_dish.update(photo_url: photo_url)
       render json: @user_dish
@@ -63,7 +47,10 @@ class Api::UserDishesController < ApplicationController
 
   # DELETE /user_dishes/1
   def destroy
-    @user_dish.destroy
+    @user_dish = UserDish.find(user_dish_params[:id])
+    if current_user.id === @user_dish.user.id
+      @user_dish.destroy
+    end
   end
 
   private
