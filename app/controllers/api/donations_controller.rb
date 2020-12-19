@@ -1,35 +1,50 @@
 class Api::DonationsController < ApplicationController
   before_action :authenticate_user!
 
-  # def index
-  #   if user_params.include?(:user_id)
-  #     @marketdishes = User.find(user_params[:user_id]).market_dishes
-  #   else
-  #     @marketdishes = MarketDish.all
-  #   end
-  #   render jsonapi: @marketdishes
-  # end
+  def index
+    if user_params.include?(:user_id)
+      @donations = User.find(user_params[:user_id]).donations
+    else
+      @donations = Donation.all
+    end
+    render jsonapi: @donations
+  end
 
-  # def show
-  #   @marketdish = MarketDish.find(marketdishes_params[:id])
-  #   render jsonapi: @marketdish
-  # end
+  def show
+    @donation = Donation.find(donation_params[:id])
+    render jsonapi: @donation
+  end
 
   def create
-    @donation = Donation.new(donation_params)
-    @donation.caller_id = current_user.id
-    if @donation.save
-      render jsonapi: @donation, status: :created
+    @user_donations = User.find(current_user.id).donations
+    if !Donation.exists?(caller_id: current_user.id, answerer_id: donation_params[:answerer_id], status: 0) || !Donation.exists?(caller_id: current_user.id, answerer_id: donation_params[:answerer_id], status: 1)
+      @donation = Donation.new(donation_params)
+      @donation.caller_id = current_user.id
+      if @donation.save
+        render jsonapi: @donation, status: :created
+      else
+        render jsonapi: @donation.errors, status: :unprocessable_entity
+      end
     else
-      render jsonapi: @donation.errors, status: :unprocessable_entity
+      render jsonapi: { message: 'Donation for this dish has already been asked' }, status: :internal_server_error
     end
   end
 
+  def update
+    @donation = Donation.find(donation_params[:id])
+    if @donation.pending? || @donation.confirmed?
+      if @donation.update(status: donation_params[:status])
+        render json: @donation
+      else
+        render json: @donation.errors, status: :unprocessable_entity
+      end
+    end
+  end
 
   private
 
   def donation_params
-    params.permit(:id, :answer_dish_id, :status)
+    params.permit(:id, :answer_dish_id, :status, :answerer_id)
   end
 
   def user_params

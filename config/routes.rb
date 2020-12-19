@@ -3,6 +3,8 @@ Rails.application.routes.draw do
     resources :users do
       resources :market_dishes
       resources :user_dishes
+      resources :trocs, only: [:index]
+      resources :donations, only: [:index]
     end
     resources :ingredients, only: [:index]
     resources :tags, only: [:index]

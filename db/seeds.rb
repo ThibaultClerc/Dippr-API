@@ -81,28 +81,39 @@ puts "#{User.all.count} users créés"
 puts "#{UserDish.all.count} plats créés"
 puts "#{MarketDish.all.count} plats mis sur le marché"
 
+caller_id = 1
+answerer_id = 6
 caller_dish_id = 1
 answer_dish_id = 21
-10.times do |i|
+5.times do |i|
   Troc.create!(
+    caller_id: caller_id,
+    answerer_id: answerer_id,
     caller_dish_id: caller_dish_id,
     answer_dish_id: answer_dish_id,
     status: rand(0..4)
   )
+  caller_id += 1
+  answerer_id += 1
   caller_dish_id += 2
   answer_dish_id += 2
 end
 
 puts "#{Troc.all.count} trocs créés"
 
-answer_dish_id = 12
-10.times do |i|
+answer_dish_donation_id = 12
+caller_donation_id = 1
+answerer_donation_id = 6
+5.times do |i|
   Donation.create!(
-    caller_id: rand(1..5),
-    answer_dish_id: answer_dish_id,
+    answerer_id: answerer_donation_id,
+    caller_id: caller_donation_id,
+    answer_dish_id: answer_dish_donation_id,
     status: rand(0..4)
   )
-  answer_dish_id += 2
+  answer_dish_donation_id += 2
+  caller_donation_id += 1
+  answerer_donation_id += 1
 end
 
 puts "#{Donation.all.count} dons créés"
