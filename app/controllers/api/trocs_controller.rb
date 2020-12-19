@@ -17,7 +17,7 @@ class Api::TrocsController < ApplicationController
 
   def create
     @user_trocs = User.find(current_user.id).trocs
-    if !@user_trocs.include?(Troc.find(troc_params[:answer_dish_id])) 
+    if !Troc.exists?(caller_id: current_user.id, answerer_id: troc_params[:answerer_id], status: 0) || !Troc.exists?(caller_id: current_user.id, answerer_id: troc_params[:answerer_id], status: 1)
       @troc = Troc.new(troc_params)
       @troc.caller_id = current_user.id
       if @troc.save
