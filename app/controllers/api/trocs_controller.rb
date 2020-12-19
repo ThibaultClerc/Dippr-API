@@ -5,7 +5,7 @@ class Api::TrocsController < ApplicationController
     if user_params.include?(:user_id)
       @trocs1 = Troc.where(answerer_id: user_params[:user_id])
       @trocs2 = Troc.where(caller_id: user_params[:user_id])
-      @trocs = @trocs1.merge(@trocs2)
+      @trocs = @trocs1 + @trocs2
     else
       @trocs = Troc.all
     end

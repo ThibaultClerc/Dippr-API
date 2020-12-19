@@ -5,7 +5,7 @@ class Api::DonationsController < ApplicationController
     if user_params.include?(:user_id)
       @donations1 = Donation.where(answerer_id: user_params[:user_id])
       @donations2 = Donation.where(caller_id: user_params[:user_id])
-      @donations = @donations1.merge(@donations2)
+      @donations = @donations1 + @donations2
     else
       @donations = Donation.all
     end
