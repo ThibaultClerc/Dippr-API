@@ -1,11 +1,13 @@
 class SerializableTroc < JSONAPI::Serializable::Resource
   type 'trocs'
 
-  attributes :id, :caller_dish_id, :answer_dish_id, :caller_id, :answerer_id, :status, :created_at
+  attributes :id, :caller_dish_id, :answer_dish_id, :caller_id, :answerer_id, :status, :created_at, :updated_at
 
-  # meta do
-  #   { 
-  #   }
-  # end
-
+  meta do
+    { answer_dish: @object.answer_dish,
+      caller_dish: @object.caller_dish,
+      answerer: @object.answerer,
+      caller: @object.caller
+    }
+  end
 end
