@@ -9,5 +9,7 @@ class User < ApplicationRecord
   has_many :trocs, foreign_key: "caller_id", class_name: "Troc"
   has_many :trocs, foreign_key: "answerer_id", class_name: "Troc"
   has_many :donations, foreign_key: "caller_id", class_name: "Donation"
+  has_one_attached :avatar
+
   has_many :donations, foreign_key: "answerer_id", class_name: "Donation"
 end
