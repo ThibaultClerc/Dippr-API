@@ -3,7 +3,9 @@ class Api::DonationsController < ApplicationController
 
   def index
     if user_params.include?(:user_id)
-      @donations = User.find(user_params[:user_id]).donations
+      @donations1 = Donation.where(answerer_id: user_params[:user_id])
+      @donations2 = Donation.where(caller_id: user_params[:user_id])
+      @donations = @donations1 + @donations2
     else
       @donations = Donation.all
     end
