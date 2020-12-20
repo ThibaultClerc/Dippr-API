@@ -8,4 +8,6 @@ class User < ApplicationRecord
   has_many :market_dishes, through: :user_dishes
   has_many :trocs, foreign_key: "caller_id", class_name: "Troc"
   has_many :donations, foreign_key: "caller_id", class_name: "Donation"
+  has_one_attached :avatar
+
 end
