@@ -3,7 +3,9 @@ class Api::TrocsController < ApplicationController
 
   def index
     if user_params.include?(:user_id)
-      @trocs = User.find(user_params[:user_id]).trocs
+      @trocs1 = Troc.where(answerer_id: user_params[:user_id])
+      @trocs2 = Troc.where(caller_id: user_params[:user_id])
+      @trocs = @trocs1 + @trocs2
     else
       @trocs = Troc.all
     end
