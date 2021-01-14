@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_19_214656) do
+ActiveRecord::Schema.define(version: 2021_01_14_133343) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,27 +36,38 @@ ActiveRecord::Schema.define(version: 2020_12_19_214656) do
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
+  create_table "dishes", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.integer "dish_rating"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "user_id"
+    t.string "photo_url"
+    t.index ["user_id"], name: "index_dishes_on_user_id"
+  end
+
   create_table "dishes_ingredients", force: :cascade do |t|
-    t.bigint "user_dish_id"
     t.bigint "ingredient_id"
+    t.bigint "dish_id"
+    t.index ["dish_id"], name: "index_dishes_ingredients_on_dish_id"
     t.index ["ingredient_id"], name: "index_dishes_ingredients_on_ingredient_id"
-    t.index ["user_dish_id"], name: "index_dishes_ingredients_on_user_dish_id"
   end
 
   create_table "dishes_tags", force: :cascade do |t|
-    t.bigint "user_dish_id"
     t.bigint "tag_id"
+    t.bigint "dish_id"
+    t.index ["dish_id"], name: "index_dishes_tags_on_dish_id"
     t.index ["tag_id"], name: "index_dishes_tags_on_tag_id"
-    t.index ["user_dish_id"], name: "index_dishes_tags_on_user_dish_id"
   end
 
   create_table "donations", force: :cascade do |t|
     t.bigint "caller_id"
-    t.bigint "answer_dish_id"
     t.integer "status"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "answerer_id"
+    t.bigint "answer_dish_id"
     t.index ["answer_dish_id"], name: "index_donations_on_answer_dish_id"
     t.index ["answerer_id"], name: "index_donations_on_answerer_id"
     t.index ["caller_id"], name: "index_donations_on_caller_id"
@@ -74,16 +85,6 @@ ActiveRecord::Schema.define(version: 2020_12_19_214656) do
     t.index ["jti"], name: "index_jwt_denylist_on_jti"
   end
 
-  create_table "market_dishes", force: :cascade do |t|
-    t.bigint "user_dish_id"
-    t.integer "market_dish_type"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.datetime "end_date", null: false
-    t.boolean "is_private"
-    t.index ["user_dish_id"], name: "index_market_dishes_on_user_dish_id"
-  end
-
   create_table "tags", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", precision: 6, null: false
@@ -91,46 +92,17 @@ ActiveRecord::Schema.define(version: 2020_12_19_214656) do
   end
 
   create_table "trocs", force: :cascade do |t|
-    t.bigint "caller_dish_id"
-    t.bigint "answer_dish_id"
     t.integer "status"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "caller_id"
     t.bigint "answerer_id"
+    t.bigint "caller_dish_id"
+    t.bigint "answer_dish_id"
     t.index ["answer_dish_id"], name: "index_trocs_on_answer_dish_id"
     t.index ["answerer_id"], name: "index_trocs_on_answerer_id"
     t.index ["caller_dish_id"], name: "index_trocs_on_caller_dish_id"
     t.index ["caller_id"], name: "index_trocs_on_caller_id"
-  end
-
-  create_table "user_dish_ingredients", force: :cascade do |t|
-    t.bigint "user_dish_id"
-    t.bigint "ingredient_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["ingredient_id"], name: "index_user_dish_ingredients_on_ingredient_id"
-    t.index ["user_dish_id"], name: "index_user_dish_ingredients_on_user_dish_id"
-  end
-
-  create_table "user_dish_tags", force: :cascade do |t|
-    t.bigint "user_dish_id"
-    t.bigint "tag_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["tag_id"], name: "index_user_dish_tags_on_tag_id"
-    t.index ["user_dish_id"], name: "index_user_dish_tags_on_user_dish_id"
-  end
-
-  create_table "user_dishes", force: :cascade do |t|
-    t.string "name"
-    t.text "description"
-    t.integer "dish_rating"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.bigint "user_id"
-    t.string "photo_url"
-    t.index ["user_id"], name: "index_user_dishes_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -161,21 +133,16 @@ ActiveRecord::Schema.define(version: 2020_12_19_214656) do
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "dishes", "users"
+  add_foreign_key "dishes_ingredients", "dishes"
   add_foreign_key "dishes_ingredients", "ingredients"
-  add_foreign_key "dishes_ingredients", "user_dishes"
+  add_foreign_key "dishes_tags", "dishes"
   add_foreign_key "dishes_tags", "tags"
-  add_foreign_key "dishes_tags", "user_dishes"
-  add_foreign_key "donations", "market_dishes", column: "answer_dish_id"
+  add_foreign_key "donations", "dishes", column: "answer_dish_id"
   add_foreign_key "donations", "users", column: "answerer_id"
   add_foreign_key "donations", "users", column: "caller_id"
-  add_foreign_key "market_dishes", "user_dishes"
-  add_foreign_key "trocs", "market_dishes", column: "answer_dish_id"
-  add_foreign_key "trocs", "market_dishes", column: "caller_dish_id"
+  add_foreign_key "trocs", "dishes", column: "answer_dish_id"
+  add_foreign_key "trocs", "dishes", column: "caller_dish_id"
   add_foreign_key "trocs", "users", column: "answerer_id"
   add_foreign_key "trocs", "users", column: "caller_id"
-  add_foreign_key "user_dish_ingredients", "ingredients"
-  add_foreign_key "user_dish_ingredients", "user_dishes"
-  add_foreign_key "user_dish_tags", "tags"
-  add_foreign_key "user_dish_tags", "user_dishes"
-  add_foreign_key "user_dishes", "users"
 end
