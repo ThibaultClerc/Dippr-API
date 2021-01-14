@@ -26,7 +26,7 @@ class Api::MarketDishesController < ApplicationController
 
   def destroy
     @market_dish = MarketDish.find(marketdishes_params[:id])
-    if current_user.id === @market_dish.user_dish.user.id
+    if current_user.id === @market_dish.dish.user.id
       @market_dish.destroy
     end
   end
@@ -39,7 +39,7 @@ class Api::MarketDishesController < ApplicationController
   private
 
   def marketdishes_params
-    params.permit(:id, :user_dish_id, :market_dish_type, :end_date)
+    params.permit(:id, :dish_id, :market_dish_type, :end_date)
   end
 
   def user_params

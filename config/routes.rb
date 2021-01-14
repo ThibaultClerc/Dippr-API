@@ -1,20 +1,18 @@
 Rails.application.routes.draw do
   namespace :api, defaults: { format: :json } do
     resources :users do
-      resources :market_dishes
-      resources :user_dishes
+      resources :dishes
       resources :trocs, only: [:index]
       resources :donations, only: [:index]
     end
     resources :ingredients, only: [:index]
     resources :tags, only: [:index]
-    resources :user_dishes
-    resources :market_dishes 
-    resources :user_dish_ingredients 
-    resources :user_dish_tags
+    resources :dishes
+    resources :dish_ingredients 
+    resources :dish_tags
     resources :trocs
     resources :donations
-    get 'marketdishes/search', to: 'market_dishes#search'
+    get 'search', to: 'dishes#search'
   end
 
   devise_for :users,

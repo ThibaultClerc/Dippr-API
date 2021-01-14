@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_14_133343) do
+ActiveRecord::Schema.define(version: 2021_01_14_144048) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,6 +36,20 @@ ActiveRecord::Schema.define(version: 2021_01_14_133343) do
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
+  create_table "dish_ingredients", force: :cascade do |t|
+    t.bigint "ingredient_id"
+    t.bigint "dish_id"
+    t.index ["dish_id"], name: "index_dish_ingredients_on_dish_id"
+    t.index ["ingredient_id"], name: "index_dish_ingredients_on_ingredient_id"
+  end
+
+  create_table "dish_tags", force: :cascade do |t|
+    t.bigint "tag_id"
+    t.bigint "dish_id"
+    t.index ["dish_id"], name: "index_dish_tags_on_dish_id"
+    t.index ["tag_id"], name: "index_dish_tags_on_tag_id"
+  end
+
   create_table "dishes", force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -45,20 +59,6 @@ ActiveRecord::Schema.define(version: 2021_01_14_133343) do
     t.bigint "user_id"
     t.string "photo_url"
     t.index ["user_id"], name: "index_dishes_on_user_id"
-  end
-
-  create_table "dishes_ingredients", force: :cascade do |t|
-    t.bigint "ingredient_id"
-    t.bigint "dish_id"
-    t.index ["dish_id"], name: "index_dishes_ingredients_on_dish_id"
-    t.index ["ingredient_id"], name: "index_dishes_ingredients_on_ingredient_id"
-  end
-
-  create_table "dishes_tags", force: :cascade do |t|
-    t.bigint "tag_id"
-    t.bigint "dish_id"
-    t.index ["dish_id"], name: "index_dishes_tags_on_dish_id"
-    t.index ["tag_id"], name: "index_dishes_tags_on_tag_id"
   end
 
   create_table "donations", force: :cascade do |t|
@@ -133,11 +133,11 @@ ActiveRecord::Schema.define(version: 2021_01_14_133343) do
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "dish_ingredients", "dishes"
+  add_foreign_key "dish_ingredients", "ingredients"
+  add_foreign_key "dish_tags", "dishes"
+  add_foreign_key "dish_tags", "tags"
   add_foreign_key "dishes", "users"
-  add_foreign_key "dishes_ingredients", "dishes"
-  add_foreign_key "dishes_ingredients", "ingredients"
-  add_foreign_key "dishes_tags", "dishes"
-  add_foreign_key "dishes_tags", "tags"
   add_foreign_key "donations", "dishes", column: "answer_dish_id"
   add_foreign_key "donations", "users", column: "answerer_id"
   add_foreign_key "donations", "users", column: "caller_id"

@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class UserDishTagTest < ActiveSupport::TestCase
+class DishTagTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end

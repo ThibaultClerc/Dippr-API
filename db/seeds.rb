@@ -39,52 +39,39 @@ puts "#{Tag.all.count} tags créés"
 
   )
   2.times do |k|
-    UserDish.create!(
+    Dish.create!(
       name: Faker::Food.dish,
       description: Faker::Lorem.paragraph,
       user_id: i + 1,
       dish_rating: rand(1..5)
     )
     img = "app/assets/images/examplePhoto.jpg"
-    UserDish.last.photo.attach(
+    Dish.last.photo.attach(
       io: File.open(img),
       filename: File.basename(img)
     )
-    UserDish.last.update(photo_url: rails_blob_path(UserDish.last.photo, only_path: true))
+    Dish.last.update(photo_url: rails_blob_path(Dish.last.photo, only_path: true))
     3.times do |j|
-      UserDishTag.create!(
-        user_dish_id: UserDish.last.id,
+      DishTag.create!(
+        dish_id: Dish.last.id,
         tag_id: Tag.find(rand(1..20)).id
       )
-      UserDishIngredient.create!(
-        user_dish_id: UserDish.last.id,
+      DishIngredient.create!(
+        dish_id: Dish.last.id,
         ingredient_id: Ingredient.find(rand(1..2253)).id
       )
     end
-    MarketDish.create(
-    user_dish_id: UserDish.last.id,
-    market_dish_type: 0,
-    end_date: Faker::Date.forward(days: 14),
-    is_private: [true, false].sample
-    )
-    MarketDish.create(
-      user_dish_id: UserDish.last.id,
-      market_dish_type: 1,
-      end_date: Faker::Date.forward(days: 14),
-      is_private: false
-    )
   end
 end
 
 
 puts "#{User.all.count} users créés"
-puts "#{UserDish.all.count} plats créés"
-puts "#{MarketDish.all.count} plats mis sur le marché"
+puts "#{Dish.all.count} plats créés"
 
 caller_id = 1
 answerer_id = 6
 caller_dish_id = 1
-answer_dish_id = 21
+answer_dish_id = 11
 5.times do |i|
   Troc.create!(
     caller_id: caller_id,
@@ -95,23 +82,23 @@ answer_dish_id = 21
   )
   caller_id += 1
   answerer_id += 1
-  caller_dish_id += 2
-  answer_dish_id += 2
+  caller_dish_id += 1
+  answer_dish_id += 1
 end
 
 puts "#{Troc.all.count} trocs créés"
 
-answer_dish_donation_id = 12
 caller_donation_id = 1
+answer_dish_donation_id = 11
 answerer_donation_id = 6
 5.times do |i|
   Donation.create!(
-    answerer_id: answerer_donation_id,
     caller_id: caller_donation_id,
+    answerer_id: answerer_donation_id,
     answer_dish_id: answer_dish_donation_id,
     status: rand(0..4)
   )
-  answer_dish_donation_id += 2
+  answer_dish_donation_id += 1
   caller_donation_id += 1
   answerer_donation_id += 1
 end

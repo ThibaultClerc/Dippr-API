@@ -1,4 +1,4 @@
 class Tag < ApplicationRecord
-  has_many :user_dish_tags
-  has_many :user_dishes, through: :user_dish_tags
+  has_many :dish_tags
+  has_many :dish, through: :dish_tags
 end
